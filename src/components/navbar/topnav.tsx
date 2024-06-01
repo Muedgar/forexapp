@@ -118,7 +118,7 @@ export default function TopNav({title}:props) {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            href="/"
                             className={classNames(active ? 'bg-gray-100' : '', `block px-4 py-2 text-lg text-gray-700 ${bebas_neue.className}`)}
                           >
                             Sign out
@@ -203,7 +203,7 @@ export default function TopNav({title}:props) {
                 </Disclosure.Button>
                 <Disclosure.Button
                   as="a"
-                  href="#"
+                  href="/"
                   className={`${bebas_neue.className} block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800`}
                 >
                   Sign out
