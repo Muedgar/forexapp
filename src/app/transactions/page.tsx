@@ -1,13 +1,11 @@
 import Card from "@/components/cards/card";
 import BarChart from "@/components/charts/BarChart";
-import Signin from "@/components/forms/signin";
-import Signup from "@/components/forms/signup";
-import Table from "@/components/tables/table";
-import { redirect } from "next/navigation";
 import { createClient } from "../../../utils/supabase/server";
+import { redirect } from "next/navigation";
+import TableCurrencyExchange from "@/components/tables/tablecurrencyexchange";
 
 
-export default async function Admin() {
+export default async function Currencies() {
   const supabase = createClient()
 
   const { data, error } = await supabase.auth.getUser()
@@ -17,6 +15,9 @@ export default async function Admin() {
   }
     return (
      <div className="mb-[200px]">
+      <Card />
+      <BarChart />
+      <TableCurrencyExchange />
      </div>
     );
   }
