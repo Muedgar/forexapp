@@ -9,6 +9,9 @@ import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 export default function TableCurrencyExchange() {
   const [open, setOpen] = useState(false)
   const [exchanges, setExchanges] = useState([])
+  const [id, setId] = useState(null)
+
+  
 
   const cancelButtonRef = useRef(null)
 
@@ -20,6 +23,8 @@ export default function TableCurrencyExchange() {
 
     fetchExchanges();
   }, []);
+
+
 
   return (
     <>
@@ -49,7 +54,7 @@ export default function TableCurrencyExchange() {
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                  <CreateMoneyExchange />
+                  {id?<CreateMoneyExchange id={id} />:<CreateMoneyExchange />}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -114,21 +119,13 @@ export default function TableCurrencyExchange() {
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.rate}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.time}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.amount}</td>
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <a 
-                            onClick={() => {
+                        <td className="relative whitespace-nowrap flex py-4 pl-3 pr-4 text-right text-2xl font-medium sm:pr-6">
+                          <PencilIcon onClick={() => {
+                              const id = exchange?.id
+                              setId(id)
                               setOpen(true)
-                            }}
-                            href="#" className="text-indigo-600 hover:text-indigo-900">
-                            <PencilIcon />
-                          </a>
-                          <a 
-                            // onClick={() => {
-                            //   setOpen(true)
-                            // }}
-                            href="#" className="text-red-600 hover:text-red-900">
-                            <TrashIcon />
-                          </a>
+                            }} className="text-indigo-600 w-[25px] hover:text-indigo-900 cursor-pointer mr-2" />
+                          <TrashIcon className="text-red-600 w-[22.5px] hover:text-red-900 cursor-pointer"/>
                         </td>
 
                       </tr>
