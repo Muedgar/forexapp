@@ -1,12 +1,32 @@
 'use client';
 
-import { createMoneyExchange } from '@/app/transactions/actions';
+import { createMoneyExchange, getMoneyExchangeById, updateMoneyExchange } from '@/app/transactions/actions';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-export default function CreateMoneyExchange({ href }: any) {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
-  const router = useRouter();
+export default function CreateMoneyExchange({ id }: any) {
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+  
+
+  const getOne = async (key:number) => {
+    try {
+     const res = await getMoneyExchangeById(key)
+      console.log("single record: ", res)
+
+      setValue('exchangers_names', res?.exchangers_names || '');
+      setValue('rate', res?.rate || '');
+      setValue('amount', res?.amount || '');
+      setValue('time', res?.time || '');
+    } catch (error) {
+    } 
+  }
+  useEffect(() => {
+    if(id) {
+      const newId = Number(id)
+      getOne(newId)
+    }
+  },[])
 
   const onSubmit = async (data: any) => {
     if(!data?.rate || !data?.exchangers_names || !data?.amount || !data?.time) {
@@ -33,10 +53,15 @@ export default function CreateMoneyExchange({ href }: any) {
 
     console.log(Object.fromEntries(formData));
     try {
-      await createMoneyExchange(formData)
-      reset()
-      window.location.reload()
+      if (id) {
+        await updateMoneyExchange(id, formData);
+      } else {
+        await createMoneyExchange(formData);
+      }
+      reset();
+      window.location.reload();
     } catch (error) {
+      console.error(error);
     }
   };
 
