@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-export default function CreateMoneyExchange({ id }: any) {
+export default function CreateMoneyExchange({ id, getData, onClose }: any) {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
   
 
@@ -18,6 +18,25 @@ export default function CreateMoneyExchange({ id }: any) {
       setValue('rate', res?.rate || '');
       setValue('amount', res?.amount || '');
       setValue('time', res?.time || '');
+
+      if(res.currencies.includes('Rwandan Francs')) {
+        setValue('rwandan_francs', true)
+      }
+      if(res.currencies.includes('Ugandan Shillings')) {
+        setValue('ugandan_shillings', true)
+      }
+      if(res.currencies.includes('Kenyan Shillings')) {
+        setValue('kenyan_shillings', true)
+      }
+      if(res.currencies.includes('Tanzanian Shillings')) {
+        setValue('tanzanian_shillings', true)
+      }
+      if(res.currencies.includes('US Dollars')) {
+        setValue('us_dollars', true)
+      }
+      if(res.currencies.includes('Euros')) {
+        setValue('euros', true)
+      }
     } catch (error) {
     } 
   }
@@ -58,8 +77,12 @@ export default function CreateMoneyExchange({ id }: any) {
       } else {
         await createMoneyExchange(formData);
       }
-      reset();
-      window.location.reload();
+      reset()
+      getData();
+
+      if(id) {
+        onClose(false)
+      }
     } catch (error) {
       console.error(error);
     }
@@ -288,7 +311,7 @@ export default function CreateMoneyExchange({ id }: any) {
             type="submit"
             className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Save
+            {id?'Update':'Save'}
           </button>
         </div>
       </div>
