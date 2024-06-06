@@ -3,23 +3,24 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-import { createClient } from '../../../utils/supabase/server'
+import { createClient } from '../../../../utils/supabase/server';
 
-export async function createMoneyExchange(formData: FormData) {
+export async function createsending(formData: FormData) {
     const supabase = createClient();
   
     // Type-casting here for convenience
     const data = {
-      exchangers_names: formData.get('exchangers_names') as string,
+      receiver_names: formData.get('receiver_names') as string,
       rate: formData.get('rate') as string,
       amount: formData.get('amount') as string,
       time: formData.get('time') as string,
       currencies: formData.get('currencies') as string,
+      telephone_number: formData.get('telephone_number') as string
     };
   
-    // Insert the data into the moneyexchange table
+    // Insert the data into the sending table
     const { error } = await supabase
-      .from('moneyexchange')
+      .from('sending')
       .insert([data]);
   
     if (error) {
@@ -32,20 +33,21 @@ export async function createMoneyExchange(formData: FormData) {
   }
 
 
-  export async function updateMoneyExchange(id:number, formData:FormData) {
+  export async function updatesending(id:number, formData:FormData) {
     const supabase = createClient();
     // Type-casting here for convenience
     const data = {
-      exchangers_names: formData.get('exchangers_names') as string,
+      receiver_names: formData.get('receiver_names') as string,
       rate: formData.get('rate') as string,
       amount: formData.get('amount') as string,
       time: formData.get('time') as string,
       currencies: formData.get('currencies') as string,
+      telephone_number: formData.get('telephone_number') as string
     };
   
-    // Update the record in the moneyexchange table where the id matches
+    // Update the record in the sending table where the id matches
     const { error } = await supabase
-      .from('moneyexchange')
+      .from('sending')
       .update(data)
       .eq('id', id);
   
@@ -60,12 +62,12 @@ export async function createMoneyExchange(formData: FormData) {
 
 
 
-  export async function getMoneyExchanges() {
+  export async function getsendings() {
     const supabase = createClient();
 
-    // Select all records from the moneyexchange table
+    // Select all records from the sending table
     const { data, error } = await supabase
-      .from('moneyexchange')
+      .from('sending')
       .select('*');
   
     if (error) {
@@ -76,12 +78,12 @@ export async function createMoneyExchange(formData: FormData) {
     }
 }
 
-export async function getMoneyExchangeById(id:number) {
+export async function getsendingById(id:number) {
   const supabase = createClient();
 
-  // Select the record from the moneyexchange table with the given ID
+  // Select the record from the sending table with the given ID
   const { data, error } = await supabase
-    .from('moneyexchange')
+    .from('sending')
     .select('*')
     .eq('id', id)
     .single(); // Ensures only one record is fetched
@@ -95,11 +97,11 @@ export async function getMoneyExchangeById(id:number) {
 }
 
 
-export async function deleteMoneyExchange(id:number) {
+export async function deletesending(id:number) {
   const supabase = createClient();
-  // Delete the record in the moneyexchange table where the id matches
+  // Delete the record in the sending table where the id matches
   const { error } = await supabase
-    .from('moneyexchange')
+    .from('sending')
     .delete()
     .eq('id', id);
 
@@ -112,7 +114,7 @@ export async function deleteMoneyExchange(id:number) {
   }
 }
 
-export async function getMoneyExchangesInRange(startDate:any, endDate:any) {
+export async function getsendingsInRange(startDate:any, endDate:any) {
   const supabase = createClient();
   // Ensure dates are in ISO format for proper querying
   const startISO = new Date(startDate).toISOString();
@@ -120,7 +122,7 @@ export async function getMoneyExchangesInRange(startDate:any, endDate:any) {
 
   // Query records between the specified start and end dates
   const { data, error } = await supabase
-    .from('moneyexchange')
+    .from('sending')
     .select('*')
     .gte('time', startISO)
     .lte('time', endISO);
