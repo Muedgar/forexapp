@@ -9,25 +9,24 @@ import DeleteMoneyExchange from '../forms/transactions_delete_money_exchange'
 import { Disclosure } from '@headlessui/react'
 import { FunnelIcon } from '@heroicons/react/20/solid'
 import Select from '../forms/select'
-import Sending from './sending'
-import Withdrawing from './withdrawing'
+import Createwithdrawing from '../forms/transactions_create_withdrawing'
+import Deletewithdrawing from '../forms/transactions_delete_withdrawing'
+import { getwithdrawings, getwithdrawingsInRange } from '@/app/transactions/withdrawing/actions'
 
 
-export default function TableCurrencyExchange() {
+export default function Withdrawing() {
   const [open, setOpen] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [exchanges, setExchanges] = useState([])
   const [id, setId] = useState(null)
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-
-  const [currentTransaction, setCurrentTransaction] = useState(1)
   
 
   const cancelButtonRef = useRef(null)
   const cancelButtonRefDelete = useRef(null)
   const fetchExchanges = async () => {
-    const data:any = await getMoneyExchanges();
+    const data:any = await getwithdrawings();
     setExchanges(data);
   }
   useEffect(() => {
@@ -36,7 +35,7 @@ export default function TableCurrencyExchange() {
   
   const handleFilter = async () => {
     if(startDate && endDate) {
-      const data:any = await getMoneyExchangesInRange(startDate, endDate)
+      const data:any = await getwithdrawingsInRange(startDate, endDate)
       setExchanges(data)
     }
   }
@@ -74,7 +73,7 @@ export default function TableCurrencyExchange() {
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                  {id?<CreateMoneyExchange id={id} getData={fetchExchanges} onClose={setOpen} />:<CreateMoneyExchange getData={fetchExchanges} />}
+                  {id?<Createwithdrawing id={id} getData={fetchExchanges} onClose={setOpen} />:<Createwithdrawing getData={fetchExchanges} />}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -108,7 +107,7 @@ export default function TableCurrencyExchange() {
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                  <DeleteMoneyExchange id={id} getData={fetchExchanges} onClose={setOpenDelete}/>
+                  <Deletewithdrawing id={id} getData={fetchExchanges} onClose={setOpenDelete}/>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -116,16 +115,15 @@ export default function TableCurrencyExchange() {
         </Dialog>
       </Transition.Root>
       
-      <div className="w-[80%] m-auto mt-[100px] px-4 sm:px-6 lg:px-8">
-      <Select whichTransaction={setCurrentTransaction} />
-        {currentTransaction === 1 && <>
+      <div className="w-[100%]">
+      <>
           <div className="sm:flex sm:items-center">
         
         <div className="sm:flex-auto">
         
-          <h1 className="text-xl font-semibold text-gray-900">Transactions - Money Exchange.</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Transactions - Withdrawing.</h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all records of transactions of money exchange or currency exchange.
+            A list of all records of transactions about withdrawing money.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -227,7 +225,10 @@ export default function TableCurrencyExchange() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                      Exchangers names
+                      Receiver names
+                    </th>
+                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                      Telephone number
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Money type (Both Currencies)
@@ -250,8 +251,9 @@ export default function TableCurrencyExchange() {
                   {exchanges.map((exchange:any, k:any) => (
                     <tr key={k}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                        {exchange.exchangers_names}
+                        {exchange.receiver_names}
                       </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.telephone_number}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.currencies}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.rate}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.time}</td>
@@ -278,17 +280,7 @@ export default function TableCurrencyExchange() {
           </div>
         </div>
       </div>
-        </>}
-
-        {currentTransaction === 2 &&
-        <>
-          <Sending />
-        </>}
-
-        {currentTransaction === 3 &&
-        <>
-        <Withdrawing />
-        </>}
+        </>
       </div>
     </>
   )
