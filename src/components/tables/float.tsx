@@ -9,12 +9,15 @@ import DeleteMoneyExchange from '../forms/transactions_delete_money_exchange'
 import { Disclosure } from '@headlessui/react'
 import { FunnelIcon } from '@heroicons/react/20/solid'
 import Select from '../forms/select'
-import Sending from './sending'
-import Withdrawing from './withdrawing'
-import Float from './float'
+import CreateSending from '../forms/transactions_create_sending'
+import DeleteSending from '../forms/transactions_delete_sending'
+import { getsendings, getsendingsInRange } from '@/app/transactions/sending/actions'
+import { getfloats, getfloatsInRange } from '@/app/transactions/float/actions'
+import CreateFloat from '../forms/transactions_float'
+import DeleteFloat from '../forms/transactions_delete_float'
 
 
-export default function TableCurrencyExchange() {
+export default function Float() {
   const [open, setOpen] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [exchanges, setExchanges] = useState([])
@@ -22,13 +25,12 @@ export default function TableCurrencyExchange() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
 
-  const [currentTransaction, setCurrentTransaction] = useState(1)
   
 
   const cancelButtonRef = useRef(null)
   const cancelButtonRefDelete = useRef(null)
   const fetchExchanges = async () => {
-    const data:any = await getMoneyExchanges();
+    const data:any = await getfloats();
     setExchanges(data);
   }
   useEffect(() => {
@@ -37,7 +39,7 @@ export default function TableCurrencyExchange() {
   
   const handleFilter = async () => {
     if(startDate && endDate) {
-      const data:any = await getMoneyExchangesInRange(startDate, endDate)
+      const data:any = await getfloatsInRange(startDate, endDate)
       setExchanges(data)
     }
   }
@@ -75,7 +77,7 @@ export default function TableCurrencyExchange() {
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                  {id?<CreateMoneyExchange id={id} getData={fetchExchanges} onClose={setOpen} />:<CreateMoneyExchange getData={fetchExchanges} />}
+                  {id?<CreateFloat id={id} getData={fetchExchanges} onClose={setOpen} />:<CreateFloat getData={fetchExchanges} />}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -109,7 +111,7 @@ export default function TableCurrencyExchange() {
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                  <DeleteMoneyExchange id={id} getData={fetchExchanges} onClose={setOpenDelete}/>
+                  <DeleteFloat id={id} getData={fetchExchanges} onClose={setOpenDelete}/>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -117,16 +119,15 @@ export default function TableCurrencyExchange() {
         </Dialog>
       </Transition.Root>
       
-      <div className="w-[80%] m-auto mt-[0px] px-4 sm:px-6 lg:px-8">
-      <Select whichTransaction={setCurrentTransaction} />
-        {currentTransaction === 1 && <>
+      <div className="w-[100%]">
+      <>
           <div className="sm:flex sm:items-center">
         
         <div className="sm:flex-auto">
         
-          <h1 className="text-xl font-semibold text-gray-900">Transactions - Money Exchange.</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Transactions - Float accounts.</h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all records of transactions of money exchange or currency exchange.
+            A list of all records of transactions about floating accounts money.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -227,15 +228,11 @@ export default function TableCurrencyExchange() {
               <table className="min-w-full divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                      Exchangers names
-                    </th>
+                    
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Money type (Both Currencies)
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Rate
-                    </th>
+                    
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Transaction date
                     </th>
@@ -250,11 +247,8 @@ export default function TableCurrencyExchange() {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {exchanges.map((exchange:any, k:any) => (
                     <tr key={k}>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                        {exchange.exchangers_names}
-                      </td>
+                      
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.currencies}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.rate}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.time}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.amount}</td>
                       <td className="relative whitespace-nowrap flex py-4 pl-3 pr-4 text-right text-2xl font-medium sm:pr-6">
@@ -279,21 +273,7 @@ export default function TableCurrencyExchange() {
           </div>
         </div>
       </div>
-        </>}
-
-        {currentTransaction === 2 &&
-        <>
-          <Sending />
-        </>}
-
-        {currentTransaction === 3 &&
-        <>
-        <Withdrawing />
-        </>}
-        {currentTransaction === 4 &&
-        <>
-        <Float />
-        </>}
+        </>
       </div>
     </>
   )
