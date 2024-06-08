@@ -116,7 +116,7 @@ export default function TableCurrencyExchange() {
         </Dialog>
       </Transition.Root>
       
-      <div className="w-[80%] m-auto mt-[100px] px-4 sm:px-6 lg:px-8">
+      <div className="w-[80%] m-auto mt-[0px] px-4 sm:px-6 lg:px-8">
       <Select whichTransaction={setCurrentTransaction} />
         {currentTransaction === 1 && <>
           <div className="sm:flex sm:items-center">

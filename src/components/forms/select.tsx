@@ -3,9 +3,12 @@ import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
 const transactions = [
-  { id: 1, name: 'Transactions - currency exchange' },
-  { id: 2, name: 'Transactions - sending ' },
-  { id: 3, name: 'Transactions - withdrawing' },
+  { id: 1, name: 'Transactions - Currency exchange' },
+  { id: 2, name: 'Transactions - Sending ' },
+  { id: 3, name: 'Transactions - Withdrawing' },
+  { id: 4, name: 'Transactions - Float account' },
+  { id: 5, name: 'Transactions - Open account'},
+  { id: 6, name: 'Transactions - Reports'}
 ]
 
 function classNames(...classes:any) {

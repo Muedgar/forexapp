@@ -16,7 +16,8 @@ export default async function Currencies() {
     return (
      <div className="mb-[200px]">
       <Card />
-      <BarChart />
+      {/* add cards with nice static charts ui/ux */}
+      {/* <BarChart />  */}
       <TableCurrencyExchange />
      </div>
     );
