@@ -44,9 +44,9 @@ export default function TopNav({title}:props) {
                     onClick={() => setActive(2)}
                     className={`inline-flex ${bebas_neue.className} items-center border-b-2 px-1 pt-1 text-lg font-medium ${active===2?"border-slate-300":"border-transparent text-black"} hover:border-b-4 hover:border-slate-300 hover:text-gray-700`}
                   >
-                    Transaction Management
+                    Transactions Management
                   </a>
-                  <a
+                  {/* <a
                     href="#"
                     onClick={() => setActive(3)}
                     className={`inline-flex ${bebas_neue.className} items-center border-b-2 px-1 pt-1 text-lg font-medium ${active===3?"border-slate-300":"border-transparent text-black"} hover:border-b-4 hover:border-slate-300 hover:text-gray-700`}
@@ -59,7 +59,7 @@ export default function TopNav({title}:props) {
                     className={`inline-flex ${bebas_neue.className} items-center border-b-2 px-1 pt-1 text-lg font-medium ${active===4?"border-slate-300":"border-transparent text-black"} hover:border-b-4 hover:border-slate-300 hover:text-gray-700`}
                   >
                     Reports
-                  </a>
+                  </a> */}
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
@@ -147,9 +147,9 @@ export default function TopNav({title}:props) {
                 onClick={() => setActive(2)}
                 className={`block ${bebas_neue.className} border-l-4 py-2 pl-3 pr-4 text-base font-medium  ${active===2?'text-black border-slate-500 bg-slate-50':'text-gray-500 border-transparent hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'}`}
               >
-                Transaction Management
+                Transactions Management
               </Disclosure.Button>
-              <Disclosure.Button
+              {/* <Disclosure.Button
                 as="a"
                 href="#"
                 onClick={() => setActive(3)}
@@ -164,7 +164,7 @@ export default function TopNav({title}:props) {
                 className={`block ${bebas_neue.className} border-l-4 py-2 pl-3 pr-4 text-base font-medium  ${active===4?'text-black border-slate-500 bg-slate-50':'text-gray-500 border-transparent hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'}`}
               >
                 Reports
-              </Disclosure.Button>
+              </Disclosure.Button> */}
             </div>
             <div className="border-t border-gray-200 pb-3 relative">
               <div className="flex justify-center items-center absolute right-0 mt-2 mr-5 z-40 hover:bg-slate-200 rounded-[50%] cursor-pointer p-2">
