@@ -11,7 +11,7 @@ export async function createfloat(formData: FormData) {
     // Type-casting here for convenience
     const data = {
       amount: formData.get('amount') as string,
-      time: formData.get('time') as string,
+      time: formData.get('time')?.toString() as string,
       currencies: formData.get('currencies') as string,
     };
   
@@ -35,7 +35,7 @@ export async function createfloat(formData: FormData) {
     // Type-casting here for convenience
     const data = {
       amount: formData.get('amount') as string,
-      time: formData.get('time') as string,
+      time: formData.get('time')?.toString() as string,
       currencies: formData.get('currencies') as string,
     };
   

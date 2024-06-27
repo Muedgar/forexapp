@@ -1,23 +1,19 @@
 'use client';
 
-import { createMoneyExchange, getMoneyExchangeById, updateMoneyExchange } from '@/app/transactions/actions';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { createopen, getopenById, updateopen } from '@/app/transactions/open/actions';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-export default function CreateMoneyExchange({ id, getData, onClose }: any) {
+export default function CreateOpen({ id, getData, onClose }: any) {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
   
 
   const getOne = async (key:number) => {
     try {
-     const res = await getMoneyExchangeById(key)
-     
-
-      setValue('exchangers_names', res?.exchangers_names || '');
-      setValue('rate', res?.rate || '');
+     const res = await getopenById(key)
       setValue('amount', res?.amount || '');
       setValue('time', res?.time || '');
+      setValue('transaction_type', res?.transaction_type || '');
 
       if(res.currencies.includes('Rwandan Francs')) {
         setValue('rwandan_francs', true)
@@ -48,16 +44,15 @@ export default function CreateMoneyExchange({ id, getData, onClose }: any) {
   },[])
 
   const onSubmit = async (data: any) => {
-    if(!data?.rate || !data?.exchangers_names || !data?.amount || !data?.time) {
+  
+    if(!data?.amount || !data?.time) {
       return
     }
 
     const formData = new FormData();
-    formData.append('exchangers_names', data.exchangers_names);
-    formData.append('rate', data.rate);
     formData.append('amount', data.amount);
     formData.append('time', data.time);
-
+    formData.append('transaction_type', data.transaction_type);
     
     const currencies = [
       data.rwandan_francs && 'Rwandan Francs',
@@ -70,11 +65,13 @@ export default function CreateMoneyExchange({ id, getData, onClose }: any) {
 
     formData.append('currencies', currencies);
 
+    console.log(Object.fromEntries(formData));
     try {
       if (id) {
-        await updateMoneyExchange(id, formData);
+        await updateopen(id, formData);
       } else {
-        await createMoneyExchange(formData);
+       const res = await createopen(formData);
+        console.log("res: ", res)
       }
       reset()
       getData();
@@ -88,70 +85,20 @@ export default function CreateMoneyExchange({ id, getData, onClose }: any) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 divide-y divide-gray-200">
       <div className="space-y-8 divide-y divide-gray-200">
-        <div>
-          <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Exchangers names</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Enter names of people exchanging money, make sure they are separated by a comma e.g: John P. Doe, Smith Roman
-            </p>
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <div className="sm:col-span-4">
-              <label htmlFor="exchangers_names" className="block text-sm font-medium text-gray-700">
-                Exchangers names
-              </label>
-              <div className="mt-1 flex rounded-md shadow-sm">
-                <input
-                  type="text"
-                  {...register('exchangers_names')}
-                  id="exchangers_names"
-                  autoComplete="exchangers_names"
-                  className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+    
 
         <div>
           <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Exchange rate</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              An exchange rate is a relative price of one currency expressed in terms of another currency (or group of currencies).
-            </p>
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <div className="sm:col-span-4">
-              <label htmlFor="rate" className="block text-sm font-medium text-gray-700">
-                Exchange rate
-              </label>
-              <div className="mt-1 flex rounded-md shadow-sm">
-                <input
-                  type="text"
-                  {...register('rate')}
-                  id="rate"
-                  autoComplete="rate"
-                  className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Exchange amount</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Amount</h3>
+            {/* <p className="mt-1 text-sm text-gray-500">
               Enter exchanged amount in both currencies, e.g: 500,000 rwf to 384 Us dollars.
-            </p>
+            </p> */}
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-                Exchange amount
+                open account amount
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
@@ -166,18 +113,48 @@ export default function CreateMoneyExchange({ id, getData, onClose }: any) {
           </div>
         </div>
 
+
         <div>
           <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Exchange date</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Transaction type</h3>
+            {/* <p className="mt-1 text-sm text-gray-500">
+              Enter exchanged amount in both currencies, e.g: 500,000 rwf to 384 Us dollars.
+            </p> */}
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+            <div className="sm:col-span-4">
+              <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
+                transaction type
+              </label>
+              <div className="mt-1 flex rounded-md shadow-sm">
+                <select
+                  {...register('transaction_type')}
+                  id="transaction_type"
+                  autoComplete="transaction_type"
+                  className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                >
+                  <option value="sending">Transactions - Sending</option>
+                  <option value="withdrawing">Transactions - Withdrawing</option>
+                  <option value="float">Transactions - Float</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Date</h3>
+            {/* <p className="mt-1 text-sm text-gray-500">
               What is exchange transaction date? e.g: 12/12/2024
-            </p>
+            </p> */}
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label htmlFor="time" className="block text-sm font-medium text-gray-700">
-                Exchange date
+                Date
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
@@ -194,7 +171,7 @@ export default function CreateMoneyExchange({ id, getData, onClose }: any) {
 
         <div className="pt-8">
           <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Money type (Both Currencies)</h3>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Money type</h3>
             <p className="mt-1 text-sm text-gray-500"></p>
           </div>
           <div className="mt-6">

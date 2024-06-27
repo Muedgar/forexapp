@@ -228,6 +228,9 @@ export default function Sending() {
                     <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                       Receiver names
                     </th>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      Transaction description
+                    </th>
                     <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                       Telephone number
                     </th>
@@ -254,6 +257,7 @@ export default function Sending() {
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                         {exchange.receiver_names}
                       </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.description}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.telephone_number}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.currencies}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.rate}</td>

@@ -5,72 +5,75 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function Createwithdrawing({ id, getData, onClose }: any) {
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
-  
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm();
+  const watchedCurrency = watch('currency');
 
-  const getOne = async (key:number) => {
+  const getOne = async (key: number) => {
     try {
-     const res = await getwithdrawingById(key)
-      console.log("single record: ", res)
-      setValue('telephone_number', res?.telephone_number || '')
+      const res = await getwithdrawingById(key);
+      console.log("single record: ", res);
+      setValue('telephone_number', res?.telephone_number || '');
       setValue('receiver_names', res?.receiver_names || '');
       setValue('rate', res?.rate || '');
       setValue('amount', res?.amount || '');
       setValue('time', res?.time || '');
-
-      if(res.currencies.includes('Rwandan Francs')) {
-        setValue('rwandan_francs', true)
-      }
-      if(res.currencies.includes('Ugandan Shillings')) {
-        setValue('ugandan_shillings', true)
-      }
-      if(res.currencies.includes('Kenyan Shillings')) {
-        setValue('kenyan_shillings', true)
-      }
-      if(res.currencies.includes('Tanzanian Shillings')) {
-        setValue('tanzanian_shillings', true)
-      }
-      if(res.currencies.includes('US Dollars')) {
-        setValue('us_dollars', true)
-      }
-      if(res.currencies.includes('Euros')) {
-        setValue('euros', true)
+      setValue('description', res?.description || '')
+  
+      // Map the currency string to the corresponding radio button value
+      const currencyMap: Record<string, string> = {
+        'Rwandan Francs': 'rwandan_francs',
+        'Ugandan Shillings': 'ugandan_shillings',
+        'Kenyan Shillings': 'kenyan_shillings',
+        'Tanzanian Shillings': 'tanzanian_shillings',
+        'US Dollars': 'us_dollars',
+        'Euros': 'euros',
+      };
+      
+      if (res.currencies && currencyMap[res.currencies]) {
+        setValue('currency', currencyMap[res.currencies]);
+      } else {
+        console.error('Currency is not recognized:', res.currencies);
       }
     } catch (error) {
-    } 
-  }
+      console.error(error);
+    }
+  };
+  
+  
   useEffect(() => {
-    if(id) {
+    if (id) {
       const newId = Number(id)
       getOne(newId)
     }
-  },[])
+  }, [id])
 
   const onSubmit = async (data: any) => {
-    if(!data?.rate || !data?.receiver_names || !data?.amount || !data?.time) {
+    if (!data?.rate || !data?.receiver_names || !data?.amount || !data?.time) {
       return
     }
 
     const formData = new FormData();
+    const dateFormatted = new Date(data.time).toString()
     formData.append('receiver_names', data.receiver_names);
     formData.append('rate', data.rate);
-    formData.append('amount', data.amount);
-    formData.append('time', data.time);
+    formData.append('amount', String(data.amount));
+    formData.append('time', dateFormatted);
     formData.append('telephone_number', data.telephone_number)
+    formData.append('description', data.description)
 
-    
-    const currencies = [
-      data.rwandan_francs && 'Rwandan Francs',
-      data.ugandan_shillings && 'Ugandan Shillings',
-      data.kenyan_shillings && 'Kenyan Shillings',
-      data.tanzanian_shillings && 'Tanzanian Shillings',
-      data.us_dollars && 'US Dollars',
-      data.euros && 'Euros'
-    ].filter(Boolean).join(', ');
+    // Use the selected currency value
+    const currencyMap: Record<string, string> = {
+      'rwandan_francs': 'Rwandan Francs',
+      'ugandan_shillings': 'Ugandan Shillings',
+      'kenyan_shillings': 'Kenyan Shillings',
+      'tanzanian_shillings': 'Tanzanian Shillings',
+      'us_dollars': 'US Dollars',
+      'euros': 'Euros',
+    };
+    const selectedCurrency = currencyMap[data.currency];
+    console.log("currency",selectedCurrency)
+    formData.append('currencies', selectedCurrency);
 
-    formData.append('currencies', currencies);
-
-    console.log(Object.fromEntries(formData));
     try {
       if (id) {
         await updatewithdrawing(id, formData);
@@ -92,15 +95,12 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
         <div>
           <div>
             <h3 className="text-lg font-medium leading-6 text-gray-900">Receiver names</h3>
-            {/* <p className="mt-1 text-sm text-gray-500">
-              Enter names of people exchanging money, make sure they are separated by a comma e.g: John P. Doe, Smith Roman
-            </p> */}
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label htmlFor="receiver_names" className="block text-sm font-medium text-gray-700">
-              Receiver names
+                Receiver names
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
@@ -152,7 +152,7 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label htmlFor="telephone_number" className="block text-sm font-medium text-gray-700">
-              Telephone number
+                Telephone number
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
@@ -169,23 +169,20 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
 
         <div>
           <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Sent amount</h3>
-            {/* <p className="mt-1 text-sm text-gray-500">
-              Enter exchanged amount in both currencies, e.g: 500,000 rwf to 384 Us dollars.
-            </p> */}
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Withdrawing transaction description</h3>
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
-              <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-                Sent amount
+              <label htmlFor="receiver_names" className="block text-sm font-medium text-gray-700">
+                Description
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
                   type="text"
-                  {...register('amount')}
-                  id="amount"
-                  autoComplete="amount"
+                  {...register('description')}
+                  id="description"
+                  autoComplete="description"
                   className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
@@ -195,16 +192,37 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
 
         <div>
           <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">withdrawing date</h3>
-            {/* <p className="mt-1 text-sm text-gray-500">
-              What is exchange transaction date? e.g: 12/12/2024
-            </p> */}
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Sent amount</h3>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+            <div className="sm:col-span-4">
+              <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
+                Sent amount
+              </label>
+              <div className="mt-1 flex rounded-md shadow-sm">
+                <input
+                  type="number"
+                  {...register('amount')}
+                  id="amount"
+                  autoComplete="amount"
+                  min={0}
+                  className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Withdrawing date</h3>
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label htmlFor="time" className="block text-sm font-medium text-gray-700">
-                withdrawing date
+                Withdrawing date
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
@@ -231,8 +249,9 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
                   <div className="flex h-5 items-center">
                     <input
                       id="rwandan_francs"
-                      {...register('rwandan_francs')}
-                      type="checkbox"
+                      {...register('currency')}
+                      type="radio"
+                      value="rwandan_francs"
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
@@ -247,8 +266,9 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
                   <div className="flex h-5 items-center">
                     <input
                       id="ugandan_shillings"
-                      {...register('ugandan_shillings')}
-                      type="checkbox"
+                      {...register('currency')}
+                      type="radio"
+                      value="ugandan_shillings"
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
@@ -263,8 +283,9 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
                   <div className="flex h-5 items-center">
                     <input
                       id="kenyan_shillings"
-                      {...register('kenyan_shillings')}
-                      type="checkbox"
+                      {...register('currency')}
+                      type="radio"
+                      value="kenyan_shillings"
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
@@ -279,8 +300,9 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
                   <div className="flex h-5 items-center">
                     <input
                       id="tanzanian_shillings"
-                      {...register('tanzanian_shillings')}
-                      type="checkbox"
+                      {...register('currency')}
+                      type="radio"
+                      value="tanzanian_shillings"
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
@@ -295,8 +317,9 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
                   <div className="flex h-5 items-center">
                     <input
                       id="us_dollars"
-                      {...register('us_dollars')}
-                      type="checkbox"
+                      {...register('currency')}
+                      type="radio"
+                      value="us_dollars"
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
@@ -311,8 +334,9 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
                   <div className="flex h-5 items-center">
                     <input
                       id="euros"
-                      {...register('euros')}
-                      type="checkbox"
+                      {...register('currency')}
+                      type="radio"
+                      value="euros"
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
@@ -330,12 +354,11 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
 
       <div className="pt-5">
         <div className="flex justify-end">
-          
           <button
             type="submit"
             className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            {id?'Update':'Save'}
+            {id ? 'Update' : 'Save'}
           </button>
         </div>
       </div>
