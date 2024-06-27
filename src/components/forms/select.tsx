@@ -7,8 +7,7 @@ const transactions = [
   { id: 2, name: 'Transactions - Sending ' },
   { id: 3, name: 'Transactions - Withdrawing' },
   { id: 4, name: 'Transactions - Float account' },
-  { id: 5, name: 'Transactions - Open account'},
-  { id: 6, name: 'Transactions - Reports'}
+  { id: 5, name: 'Transactions - Open account and reports'}
 ]
 
 function classNames(...classes:any) {
@@ -21,7 +20,7 @@ export default function Select({whichTransaction}:any) {
   return (
     <Listbox value={selected} onChange={(e) => {
         setSelected(e)
-        console.log(e)
+        
         whichTransaction(e.id)
         }}>
       {({ open }) => (

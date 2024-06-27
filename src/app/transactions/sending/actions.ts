@@ -13,9 +13,10 @@ export async function createsending(formData: FormData) {
       receiver_names: formData.get('receiver_names') as string,
       rate: formData.get('rate') as string,
       amount: formData.get('amount') as string,
-      time: formData.get('time') as string,
+      time: formData.get('time')?.toString() as string,
       currencies: formData.get('currencies') as string,
-      telephone_number: formData.get('telephone_number') as string
+      telephone_number: formData.get('telephone_number') as string,
+      description: formData.get('description') as string
     };
   
     // Insert the data into the sending table
@@ -40,9 +41,10 @@ export async function createsending(formData: FormData) {
       receiver_names: formData.get('receiver_names') as string,
       rate: formData.get('rate') as string,
       amount: formData.get('amount') as string,
-      time: formData.get('time') as string,
+      time: formData.get('time')?.toString() as string,
       currencies: formData.get('currencies') as string,
-      telephone_number: formData.get('telephone_number') as string
+      telephone_number: formData.get('telephone_number') as string,
+      description: formData.get('description') as string
     };
   
     // Update the record in the sending table where the id matches
@@ -134,3 +136,5 @@ export async function getsendingsInRange(startDate:any, endDate:any) {
     return data;
   }
 }
+
+//Createwithdrawing

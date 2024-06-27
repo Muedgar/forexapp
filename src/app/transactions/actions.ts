@@ -13,7 +13,7 @@ export async function createMoneyExchange(formData: FormData) {
       exchangers_names: formData.get('exchangers_names') as string,
       rate: formData.get('rate') as string,
       amount: formData.get('amount') as string,
-      time: formData.get('time') as string,
+      time: formData.get('time')?.toString() as string,
       currencies: formData.get('currencies') as string,
     };
   
@@ -39,7 +39,7 @@ export async function createMoneyExchange(formData: FormData) {
       exchangers_names: formData.get('exchangers_names') as string,
       rate: formData.get('rate') as string,
       amount: formData.get('amount') as string,
-      time: formData.get('time') as string,
+      time: formData.get('time')?.toString() as string,
       currencies: formData.get('currencies') as string,
     };
   
