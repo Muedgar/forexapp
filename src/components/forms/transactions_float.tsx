@@ -73,8 +73,8 @@ export default function CreateFloat({ id, getData, onClose }: any) {
       if (id) {
         await updatefloat(id, formData);
       } else {
-        const res = await createfloat(formData);
-        console.log("res: ", res);
+        await createfloat(formData);
+        
       }
       reset();
       getData();

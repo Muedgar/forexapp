@@ -15,6 +15,7 @@ import { getsendings, getsendingsInRange } from '@/app/transactions/sending/acti
 import { getallopen, getopens, getopensInRange } from '@/app/transactions/open/actions'
 import CreateOpen from '../forms/transactions_open'
 import DeleteOpen from '../forms/transactions_delete_open'
+var FileSaver = require('file-saver');
 
 
 export default function Open() {
@@ -64,6 +65,52 @@ export default function Open() {
   const handleClear = () => {
     fetchExchanges();
   }
+
+  const handlePdf = async () => {
+    try {
+      if(!exchanges) {
+        return
+      }
+      console.log("data:  ", exchanges)
+      const response = await fetch('/api/generate-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ exchanges }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch the PDF');
+      }
+  
+      const blob = await response.blob();
+      FileSaver.saveAs(blob, 'report.pdf');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  };
+  
+  const handleExcel = async () => {
+    try {
+      const response = await fetch('/api/generate-excel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ exchanges }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch the Excel file');
+      }
+  
+      const blob = await response.blob();
+      FileSaver.saveAs(blob, 'report_excel.xlsx');
+    } catch (error) {
+      console.error('Error generating Excel:', error);
+    }
+  };
 
 
   return (
@@ -147,19 +194,19 @@ export default function Open() {
             A list of all records of transactions about opening accounts money.
           </p>
         </div>
-        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+        {/* <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
             type="button"
             onClick={() => {
               setOpen(true)
               setId(null)
-              console.log("current state: ",open)
+           
             }}
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
           >
             Create Record
           </button>
-        </div>
+        </div> */}
       </div>
       <div className="bg-white">
     
@@ -176,7 +223,7 @@ export default function Open() {
       <div className="relative col-start-1 row-start-1 py-4">
         <div className="mx-auto flex max-w-7xl space-x-6 divide-x divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
           <div>
-            <Disclosure.Button className="group flex items-center font-medium text-gray-700">
+            <Disclosure.Button className="group flex items-center font-medium text-gray-700  p-2">
               <FunnelIcon
                 className="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500"
                 aria-hidden="true"
@@ -185,13 +232,25 @@ export default function Open() {
             </Disclosure.Button>
           </div>
           <div className="pl-6">
-            <button onClick={handleFilter} type="button" className="text-gray-500 hover:text-black">
+            <button onClick={handleFilter} type="button" className="text-gray-500 hover:text-black p-2">
               Apply
             </button>
           </div>
           <div className="pl-6">
-            <button onClick={handleClear} type="button" className="text-gray-500 hover:text-black">
+            <button onClick={handleClear} type="button" className="text-gray-500 hover:text-black p-2">
               Clear all
+            </button>
+          </div>
+
+          <div className="pl-6">
+            <button onClick={handlePdf} type="button" className="text-white hover:text-black bg-red-600 p-2">
+              Export/Download PDF Report
+            </button>
+          </div>
+
+          <div className="pl-6">
+            <button onClick={handleExcel} type="button" className="text-white hover:text-black bg-green-600 p-2">
+              Export/Download Excel Report
             </button>
           </div>
         </div>

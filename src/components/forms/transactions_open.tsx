@@ -65,13 +65,13 @@ export default function CreateOpen({ id, getData, onClose }: any) {
 
     formData.append('currencies', currencies);
 
-    console.log(Object.fromEntries(formData));
+
     try {
       if (id) {
         await updateopen(id, formData);
       } else {
-       const res = await createopen(formData);
-        console.log("res: ", res)
+       await createopen(formData);
+     
       }
       reset()
       getData();
