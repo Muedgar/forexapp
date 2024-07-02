@@ -11,7 +11,6 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
   const getOne = async (key: number) => {
     try {
       const res = await getwithdrawingById(key);
-      console.log("single record: ", res);
       setValue('telephone_number', res?.telephone_number || '');
       setValue('receiver_names', res?.receiver_names || '');
       setValue('rate', res?.rate || '');
@@ -71,7 +70,6 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
       'euros': 'Euros',
     };
     const selectedCurrency = currencyMap[data.currency];
-    console.log("currency",selectedCurrency)
     formData.append('currencies', selectedCurrency);
 
     try {

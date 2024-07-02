@@ -479,7 +479,6 @@ export async function getallopen() {
       ...rwandan_francs, ...ugandan_shillings, ...kenyan_shillings, ...tanzanian_shillings, ...us_dollars, ...euros
     ]
 
-    console.log(result)
     return result
 
 }

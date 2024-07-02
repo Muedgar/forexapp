@@ -11,7 +11,6 @@ export default function CreateSending({ id, getData, onClose }: any) {
   const getOne = async (key: number) => {
     try {
       const res = await getsendingById(key);
-      console.log("single record: ", res);
       setValue('telephone_number', res?.telephone_number || '');
       setValue('receiver_names', res?.receiver_names || '');
       setValue('rate', res?.rate || '');
