@@ -242,11 +242,11 @@ export default function Open() {
             </button>
           </div>
 
-          <div className="pl-6">
+          {/* <div className="pl-6">
             <button onClick={handlePdf} type="button" className="text-white hover:text-black bg-red-600 p-2">
               Export/Download PDF Report
             </button>
-          </div>
+          </div> */}
 
           <div className="pl-6">
             <button onClick={handleExcel} type="button" className="text-white hover:text-black bg-green-600 p-2">
@@ -334,8 +334,8 @@ export default function Open() {
                     <tr key={k}>  
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.currency}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{new Date(exchange.float_date)?.toDateString()}</td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.float_amount}</td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.open_account}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{Number(exchange.float_amount).toLocaleString()}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{Number(exchange.open_account).toLocaleString()}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{new Date(exchange.float_week_monday)?.toDateString()}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{new Date(exchange.float_week_saturday)?.toDateString()}</td>
                   </tr>

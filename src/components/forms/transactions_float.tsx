@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 export default function CreateFloat({ id, getData, onClose }: any) {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
   const [currentCurrency, setCurrentCurrency] = useState('');
-
+const [amount, setAmount] = useState('')
   const getOne = async (key:number) => {
     try {
       const res = await getfloatById(key);
@@ -94,7 +94,7 @@ export default function CreateFloat({ id, getData, onClose }: any) {
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-                Float account amount
+                Float account amount: {Number(amount).toLocaleString()}
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
@@ -103,6 +103,7 @@ export default function CreateFloat({ id, getData, onClose }: any) {
                   id="amount"
                   min={0}
                   autoComplete="amount"
+                  onChange={e=> setAmount(e.target.value)}
                   className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>

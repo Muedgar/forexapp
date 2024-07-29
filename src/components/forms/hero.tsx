@@ -27,11 +27,10 @@ export default function Hero() {
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl">
               
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                Data to enrich your online business
+                Welcome to FOREIGNEx.
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet
-                fugiat veniam occaecat fugiat aliqua.
+                Record transactions including sending money, withdrawing money, currency exchange, and generate reports of float and open account.
               </p>
               <Signin href={'/currencies'} />
             </div>

@@ -249,8 +249,9 @@ export default function Float() {
                     <tr key={k}>
                       
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.currencies}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.time}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{exchange.amount}</td>
+                      {/* {new Date(exchange.time)?.toDateString()} */}
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{new Date(exchange.time)?.toDateString()}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{Number(exchange.amount).toLocaleString()}</td>
                       <td className="relative whitespace-nowrap flex py-4 pl-3 pr-4 text-right text-2xl font-medium sm:pr-6">
                         <PencilIcon onClick={() => {
                             const id = exchange?.id
