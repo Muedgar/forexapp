@@ -1,12 +1,13 @@
 'use client';
 
 import { createsending, getsendingById, updatesending } from '@/app/transactions/sending/actions';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function CreateSending({ id, getData, onClose }: any) {
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm();
   
+  const [amount, setAmount] = useState('')
 
   const getOne = async (key: number) => {
     try {
@@ -196,7 +197,7 @@ export default function CreateSending({ id, getData, onClose }: any) {
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-                Sent amount
+                Sent amount: {Number(amount).toLocaleString()}
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
@@ -204,6 +205,7 @@ export default function CreateSending({ id, getData, onClose }: any) {
                   {...register('amount')}
                   id="amount"
                   autoComplete="amount"
+                  onChange={e=> setAmount(e.target.value)}
                   min={0}
                   className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />

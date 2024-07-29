@@ -4,12 +4,13 @@ import "./globals.css";
 import TopNav from "@/components/navbar/topnav";
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
+import Head from "next/head";
 config.autoAddCss = false
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Forex Reporting System",
+  title: "FOREIGNEx - Welcome",
   description: "Created by Mutangana Edgar",
 };
 
@@ -20,6 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <body className={inter.className}>
         {children}
         

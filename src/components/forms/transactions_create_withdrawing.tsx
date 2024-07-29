@@ -1,12 +1,14 @@
 'use client';
 
 import { createwithdrawing, getwithdrawingById, updatewithdrawing } from '@/app/transactions/withdrawing/actions';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function Createwithdrawing({ id, getData, onClose }: any) {
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm();
   const watchedCurrency = watch('currency');
+
+  const [amount, setAmount] = useState('')
 
   const getOne = async (key: number) => {
     try {
@@ -190,13 +192,13 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
 
         <div>
           <div>
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Sent amount</h3>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Withdrew amount</h3>
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-                Sent amount
+                Withdrew amount: {Number(amount).toLocaleString()}
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
@@ -204,6 +206,7 @@ export default function Createwithdrawing({ id, getData, onClose }: any) {
                   {...register('amount')}
                   id="amount"
                   autoComplete="amount"
+                  onChange={e=> setAmount(e.target.value)}
                   min={0}
                   className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
